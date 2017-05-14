@@ -363,7 +363,7 @@ func (c *NodeConfig) updateConfig() error {
 func (c *NodeConfig) updateGenesisConfig() error {
 	var genesis *core.Genesis
 
-	switch c.NetworkID {
+	/*switch c.NetworkID {
 	case MainNetworkID:
 		genesis = core.DefaultGenesisBlock()
 	case RopstenNetworkID:
@@ -372,13 +372,17 @@ func (c *NodeConfig) updateGenesisConfig() error {
 		genesis = core.DefaultRinkebyGenesisBlock()
 	default:
 		return nil
-	}
+	}*/
 
-	// encode the genesis into JSON
-	enc, err := json.Marshal(genesis)
-	if err != nil {
-		return err
-	}
+	genesis = core.LokkitGenesisBlock()
+        // encode the genesis into JSON
+        enc, err := json.Marshal(genesis)
+        if err != nil {
+                return err
+        }
+
+	// Lokkit hack
+	enc = []byte(`{  "config": {    "chainId": 42,    "homesteadBlock": 0,    "eip155Block": 0,    "eip158Block": 0   },  "difficulty" : "0x20000",  "gasLimit"   : "0x80000000",  "alloc": {    "0xe0a83a8b5ba5c9acc140f89296187f96a163cf43": {      "balance": "20000000000000000000"     },    "0x677c9e0a30ba472eec4ea0f4ed6dcfb1c51d6bf1": {      "balance": "20000000000000000000"     },    "0xa26efbc2634c81900b3d2f604e6b427dfe6e1764": {      "balance": "20000000000000000000"     },    "0xaf75fcb29d58549b9c451a52a64e9020a66bdf6e": {      "balance": "20000000000000000000"     },    "0x9fffb27287898a20857531d7aae0942184e7d56e": {      "balance": "20000000000000000000"     },    "0x183d9685e49367c07dc63f0938d112a74945e411": {      "balance": "20000000000000000000"     },    "0x57f5d12a63025e819bb51e973be075717d923c15": {      "balance": "20000000000000000000"     },    "0xf55fb78f02ac5ecc9333b35b4287609140690517": {      "balance": "20000000000000000000"     },    "0xb5ede4a54dddec0fc345b5dc11d9db077015d686": {      "balance": "20000000000000000000"     },    "0x179972bea45078eac67ac60c8de2257e6af33e27": {      "balance": "20000000000000000000"     }   } }`)
 	c.LightEthConfig.Genesis = string(enc)
 
 	return nil

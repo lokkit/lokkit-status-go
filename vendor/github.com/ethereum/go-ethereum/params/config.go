@@ -50,6 +50,14 @@ var (
 		Ethash:         new(EthashConfig),
 	}
 
+	LokkitChainConfig = &ChainConfig{
+		ChainId:        big.NewInt(42),
+		HomesteadBlock: big.NewInt(0),
+		DAOForkBlock:   nil,
+		DAOForkSupport: true,
+		Ethash:         new(EthashConfig),
+	}
+
 	// RinkebyChainConfig contains the chain parameters to run a node on the Rinkeby test network.
 	RinkebyChainConfig = &ChainConfig{
 		ChainId:        big.NewInt(4),
