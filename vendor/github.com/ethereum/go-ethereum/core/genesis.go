@@ -278,6 +278,15 @@ func DefaultTestnetGenesisBlock() *Genesis {
 	}
 }
 
+func LokkitGenesisBlock() *Genesis {
+	return &Genesis{
+		Config:     params.LokkitChainConfig,
+		GasLimit:   0x80000000,
+		Difficulty: big.NewInt(0x20000),
+		Alloc:      decodePrealloc(testnetAllocData),
+	}
+}
+
 // DefaultRinkebyGenesisBlock returns the Rinkeby network genesis block.
 func DefaultRinkebyGenesisBlock() *Genesis {
 	return &Genesis{
