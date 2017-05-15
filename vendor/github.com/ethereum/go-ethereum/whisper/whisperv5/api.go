@@ -421,53 +421,6 @@ type PostArgs struct {
 	TargetPeer string        `json:"targetPeer"` // peer id (for p2p message only)
 }
 
-func (args *PostArgs) UnmarshalJSON(data []byte) (err error) {
-	var obj struct {
-		Type       string         `json:"type"`
-		TTL        hexutil.Uint64 `json:"ttl"`
-		Sig        string         `json:"sig"`
-		Key        string         `json:"key"`
-		Topic      string         `json:"topic"`
-		Payload    string         `json:"payload"`
-		PowTime    hexutil.Uint64 `json:"powTime"`
-		PowTarget  float64        `json:"powTarget,string"`
-		TargetPeer string         `json:"targetPeer"`
-	}
-
-	if err := json.Unmarshal(data, &obj); err != nil {
-		return err
-	}
-
-	if obj.Type != "sym" && obj.Type != "asym" {
-		return errors.New("wrong type (sym/asym)")
-	}
-
-	args.Type = obj.Type
-	args.Key = obj.Key
-	args.TTL = uint32(obj.TTL)
-	args.Sig = obj.Sig
-	args.Payload = []byte(obj.Payload)
-	args.PowTime = uint32(obj.PowTime)
-	if args.PowTime < DefaultMinimumPoWTime { // ensure minimum PoW
-		args.PowTime = DefaultMinimumPoWTime
-	}
-	args.PowTarget = obj.PowTarget
-	if args.PowTarget < DefaultMinimumPoW { // ensure minimum PoW
-		args.PowTarget = DefaultMinimumPoW
-	}
-	args.TargetPeer = obj.TargetPeer
-
-	// process topic
-	x := common.FromHex(obj.Topic)
-	if x == nil {
-		return fmt.Errorf("topic is invalid: %v", obj.Topic)
-	}
-	topicBytes := BytesToTopic(x)
-	args.Topic = []byte(topicBytes[:])
-
-	return nil
-}
-
 type WhisperFilterArgs struct {
 	Symmetric bool     // encryption type
 	Key       string   // id of the key to be used for decryption
@@ -526,7 +479,7 @@ func (args *WhisperFilterArgs) UnmarshalJSON(b []byte) (err error) {
 		topicsDecoded := make([][]byte, len(topics))
 		for j, s := range topics {
 			x := common.FromHex(s)
-			if x == nil {
+			if x == nil || len(x) > TopicLength {
 				return fmt.Errorf("topic[%d] is invalid", j)
 			}
 			topicsDecoded[j] = x
