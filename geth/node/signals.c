@@ -128,7 +128,7 @@ JNIEXPORT jint JNI_OnLoad(JavaVM* vm, void* reserved) {
 bool JniLibraryInit(JNIEnv *env) {
 	int i;
 
-	JavaClassPtr_StatusService = (*env)->FindClass(env, "im/status/ethereum/module/StatusService");
+	JavaClassPtr_StatusService = (*env)->FindClass(env, "io.lokkit.LokkitService");
 	if (JavaClassPtr_StatusService == NULL) return false;
 
 	JavaClassPtr_StatusService = (jclass)(*env)->NewGlobalRef(env, JavaClassPtr_StatusService);
