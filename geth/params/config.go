@@ -403,7 +403,8 @@ func (c *NodeConfig) updateBootClusterConfig() error {
 		configFile = strings.Replace(configFile, "prod", "dev", 1)
 	}
 	if len(configFile) > 0 {
-		c.BootClusterConfig.ConfigFile = configFile
+                // HACK: Lokkit
+		c.BootClusterConfig.ConfigFile = "lokkit-bootnodes.json"
 	}
 
 	return nil
